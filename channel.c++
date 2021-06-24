@@ -7,7 +7,7 @@ class device{
 	public:
 	float data_rate, distance, tolerance;
 	int dev_id;
-	int allocation=94;
+	int allocation=0;
 	device(int d_id, int d_rate, int dis){
         data_rate=d_rate;
         dev_id=d_id;
@@ -68,16 +68,23 @@ int main()
         for(int c=1;c<=k;c++){
             A[i].allocation=c;
             vector<device> D;
+            int f=0;
             for(int x=0;x<5;x++){
                 if(A[x].allocation==c){
-                    D[x]=A[x];
+                    D[f]=A[x];
+                    f++;
                 }
             }
-            for (int x=0;x<=D.size();x++)
+            for (int x=0;x<D.size();x++)
             {
-                for (int y=1;y<=D.size();y++)
-                {
+                for (int y=1;y<D.size();y++)
+                {   
+                    if(x==y){
+                        sum=0;
+                    }
+                    else{
                     sum=sum+In(D[x].distance,D[y].distance);
+                    }
                 }
                 if (sum>D[x].tolerance){
                     A[i].allocation=0;
@@ -91,8 +98,10 @@ int main()
         }
 
     }
+    cout<<"Done \n";
     for(int z=0;z<5;z++)
 	{
+        cout<<"I am here";
 		A[z].output();
 	}
 
