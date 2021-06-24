@@ -71,17 +71,21 @@ int main()
 	{
 		A[z].output();
 	}
+    cout<<"\n starting algo";
     for(int i=p;i<5;i++){
         for(int c=1;c<=k;c++){
             A[i].allocation=c;
             vector<device> D;
-            int f=0;
             for(int x=0;x<5;x++){
                 if(A[x].allocation==c){
-                    D[f]=A[x];
-                    f++;
+                    D.push_back(*(new device(A[x].dev_id, A[x].data_rate, A[x].distance, A[x].tolerance)));
                 }
             }
+            cout<<"\n values of D";
+            for(int z=0;z<D.size();z++)
+	        {
+		    D[z].output();
+	        }
             for (int x=0;x<D.size();x++)
             {
                 for (int y=1;y<D.size();y++)
@@ -105,10 +109,9 @@ int main()
         }
 
     }
-    cout<<"Done \n";
+    cout<<"\n Done \n";
     for(int z=0;z<5;z++)
 	{
-        cout<<"I am here";
 		A[z].output();
 	}
 
