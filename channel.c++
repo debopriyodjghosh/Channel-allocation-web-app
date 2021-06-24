@@ -7,12 +7,13 @@ class device{
 	public:
 	double data_rate, distance, tolerance;
 	int dev_id;
-	int allocation=0;
-	device(int d_id, double d_rate, double dis, double tol){
+	int allocation;
+	device(int d_id, double d_rate, double dis, double tol, int allo){
         data_rate=d_rate;
         dev_id=d_id;
         distance=dis;
         tolerance=tol;
+        allocation=allo;
     }
     void output()
 	{
@@ -43,7 +44,8 @@ int main()
         cin>>d_id>>d_rate>>dis;
         temp=d_rate/20;
 		tol=1/(pow(2, temp)-1);
-        A.push_back(*(new device(d_id, d_rate, dis, tol)));
+        int allo=0;
+        A.push_back(*(new device(d_id, d_rate, dis, tol, allo)));
     }
     cout<<"\n Before sort";
     for(int z=0;z<5;z++)
@@ -78,7 +80,7 @@ int main()
             vector<device> D;
             for(int x=0;x<5;x++){
                 if(A[x].allocation==c){
-                    D.push_back(*(new device(A[x].dev_id, A[x].data_rate, A[x].distance, A[x].tolerance)));
+                    D.push_back(*(new device(A[x].dev_id, A[x].data_rate, A[x].distance, A[x].tolerance, A[x].allocation)));
                 }
             }
             cout<<"\n values of D";
@@ -88,10 +90,10 @@ int main()
 	        }
             for (int x=0;x<D.size();x++)
             {
-                for (int y=1;y<D.size();y++)
+                for (int y=0;y<D.size();y++)
                 {   
                     if(x==y){
-                        sum=0;
+                        sum=sum+0;
                     }
                     else{
                     sum=sum+In(D[x].distance,D[y].distance);
