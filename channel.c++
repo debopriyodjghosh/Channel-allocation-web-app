@@ -5,22 +5,15 @@ using namespace std;
 #include<vector>
 class device{
 	public:
-	float data_rate, distance, tolerance;
+	double data_rate, distance, tolerance;
 	int dev_id;
 	int allocation=0;
-	device(int d_id, int d_rate, int dis){
+	device(int d_id, double d_rate, double dis, double tol){
         data_rate=d_rate;
         dev_id=d_id;
         distance=dis;
+        tolerance=tol;
     }
-    void caltol()
-	
-	{
-		float temp=data_rate/20;
-		tolerance=1/(pow(2, temp)-1);
-		
-		
-	}
     void output()
 	{
 		cout<<"\n details are : "<<dev_id<<" "<<data_rate<<" "<<distance<<" "<<tolerance<<" "<<allocation;
@@ -38,31 +31,45 @@ bool cmp(device oa, device ob){
 
 int main()
 {
-    int d_id, d_rate, dis,p=2,r=1;
-    float sum=0.0;
+    int d_id,p=2;
+    double sum=0.0,tol=0.0, d_rate, dis;
 	vector<device> A;
-	int i,k;
+	int k;
 	cout<<"enter no of channels ";
 	cin>>k;
 	for(int i = 0; i <5; i++){
+        double temp=0;
         cout<<"Enter for device: "<<(i+1)<<"\n";
         cin>>d_id>>d_rate>>dis;
-        A.push_back(*(new device(d_id, d_rate, dis)));
+        temp=d_rate/20;
+		tol=1/(pow(2, temp)-1);
+        A.push_back(*(new device(d_id, d_rate, dis, tol)));
     }
-	for(device i : A)
+    cout<<"\n Before sort";
+    for(int z=0;z<5;z++)
 	{
-		i.caltol();
-	}	
+		A[z].output();
+	}
+
     sort(A.begin()+p, A.end(),cmp);
+        cout<<"\n AFter sort";
+       for(int z=0;z<5;z++)
+	{
+		A[z].output();
+	}
     for(int i=0;i<5;i++)
 	{
-        if(r<=p){
-		A[i].allocation=r;
-        r++;
+        if(i<p){
+		A[i].allocation=i+1;
         }
         else{
             A[i].allocation=0;
         }
+	}
+    cout<<"\n After initial allocation";
+    for(int z=0;z<5;z++)
+	{
+		A[z].output();
 	}
     for(int i=p;i<5;i++){
         for(int c=1;c<=k;c++){
