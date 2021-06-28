@@ -17,7 +17,7 @@ class device{
     }
     void output()
 	{
-		cout<<"\n"<<dev_id<<"          "<<data_rate<<"           "<<distance<<"      "<<tolerance<<"      "<<allocation;
+		cout<<"\n"<<dev_id<<"          "<<data_rate<<"           "<<distance<<"   "<<tolerance<<"      "<<allocation;
 	}
 };
 float In(int dis1,int dis2){ //function for calculating interference
@@ -36,7 +36,7 @@ int main()
     double tol=0.0, d_rate, dis;
 	vector<device> A;
 	int k;
-	cout<<"enter no of channels ";
+	cout<<" Enter no of channels ";
 	cin>>k;
     cout<<"\n Enter number of device:";
     cin>>n;
@@ -45,12 +45,12 @@ int main()
     cout<<"\n Please enter first "<<p<< " devices(data rate>20 mbps) then enter rest of the devices: ";
 	for(int i = 0; i <n; i++){
         double temp=0;
-        cout<<"Enter for device: "<<(i+1)<<"\n";
-        cout<<"device id:";
+        cout<<"\n Enter for device: "<<(i+1)<<"\n";
+        cout<<"  device id:";
         cin>>d_id;
-        cout<<"data rate:";
+        cout<<" data rate:";
         cin>>d_rate;
-        cout<<"distance:";
+        cout<<" distance:";
         cin>>dis;
         temp=d_rate/20;
 		tol=1/(pow(2, temp)-1);
@@ -58,7 +58,7 @@ int main()
         A.push_back(*(new device(d_id, d_rate, dis, tol, allo)));
     }
     cout<<"\n Entered data:";
-    cout<<"\ndevice_id data_rate distance tolerance allocation";
+    cout<<"\n device_id data_rate distance tolerance allocation";
     for(int z=0;z<n;z++)
 	{
 		A[z].output();
@@ -66,7 +66,7 @@ int main()
 
     sort(A.begin()+p, A.end(),cmp);
         cout<<"\n After sorting the devcies with data rate lesser tahn 20 mbps w.r.t data rate:";
-        cout<<"\ndevice_id data_rate distance tolerance allocation";
+        cout<<"\n device_id data_rate distance tolerance allocation";
        for(int z=0;z<n;z++)
 	{
 		A[z].output();
@@ -81,7 +81,7 @@ int main()
         }
 	}
     cout<<"\n After initial allocation";
-    cout<<"\ndevice_id data_rate distance tolerance allocation";
+    cout<<"\n device_id data_rate distance tolerance allocation";
     for(int z=0;z<n;z++)
 	{
 		A[z].output();
@@ -122,8 +122,8 @@ int main()
         }
 
     }
-    cout<<"\n Done \n";
-    cout<<"\ndevice_id data_rate distance tolerance allocation";
+    cout<<"\n Done. 0: Means no channel is allocated \n";
+    cout<<"\n device_id data_rate distance tolerance allocation";
     for(int z=0;z<n;z++)
 	{
 		A[z].output();
