@@ -1,0 +1,39 @@
+screen 1
+No of device and Channel
+No of device data rate> 20
+
+
+screen 2
+base station
+random generated data set
+x y xoordinate
+data rate 
+device id
+distance
+initial allocation
+tollerence
+
+screen 3 
+output
+sc 1
+
+
+
+database
+table 1
+no of device, no of channel,
+no of device data rate>20
+
+table 2
+device id
+x, Y coordinate
+distance
+data rate
+tollerence
+allocation
+
+
+
+
+
+
