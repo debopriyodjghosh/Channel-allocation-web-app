@@ -13,39 +13,31 @@
         </div>
         <hr>
         <div class="heading">
-            <h3>Give some basic information to start the system</h3>
+            <h3>Give Base Station Location to start the system</h3>
         </div>
         <div class="heading">
 
-            <form action="#">
+            <form action="base.php" method="POST">
                 <div class="row">
-                   
-
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                            <input type="number" class="form-control" placeholder="Enter Number of Devices">
-                        </div>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="number" name="device_count" class="form-control" placeholder="Enter Number of Devices" required>
+                    </div>
                 </div>
-				<div class="row">
-				
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                            <input type="number" class="form-control" placeholder="Enter Number of Channels">
-                        </div>
-                </div>
-
                 <div class="row">
-						<div class="input-group input-group-lg">
-                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                            <input type="number" class="form-control" placeholder="Enter Number of Devices with Data rate > 20Mbps">
-                        </div>
-                    
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="number" name="channel_count" class="form-control" placeholder="Enter Number of Channels" required>
+                    </div>
                 </div>
-                
-                
-                
+                <div class="row">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="number" name="priority_device" class="form-control" placeholder="Enter Number of Devices with Data rate > 20Mbps" required>
+                    </div>
 
-                <button type="submit" class="float">Next</button>
+                </div>
+                <button type="submit" name="submit" class="float">Next</button>
             </form>
         </div>
     </div>
