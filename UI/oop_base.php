@@ -120,11 +120,45 @@ $device_final = array_merge($device1, $device2);
                 </table>
             </div>
         </div>
-        
-        <?php
-        //print device table before allocation to be done
+        <!-- print device table before allocation to be done
        
-        //initial allocation
+       initial allocation -->
+        <div class="heading">
+            <h3>View Device Details</h3>
+            <hr>
+        </div>
+        <div class="heading">
+            <div class="card-body table-responsive p-0" style="height: 600px;">
+                <table class="table table-head-fixed text-nowrap">
+                    <thead-dark>
+                        <tr>
+                            <th>Dev ID</th>
+                            <th>Data Rate</th>
+                            <th>Distance</th>
+                            <th>Tollerence</th>
+                            <th>Allocated to channel</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            //display device table
+
+                            for ($m = 0; $m < $device_count; $m++) {
+                                echo " <tr>";
+                                echo "<td>" . $device_final[$m]->dev_id . "</td>";
+                                echo "<td>" . $device_final[$m]->data_rate . "</td>";
+                                echo "<td>" . $device_final[$m]->distance . "</td>";
+                                echo "<td>" . $device_final[$m]->tolerance . "</td>";
+                                echo "<td>" . $device_final[$m]->allocation . "</td>";
+                                echo "</tr>";
+                            }
+                            ?>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+        <?php
+       
 
         for ($i = 0; $i < $device_count; $i++) {
             if ($i < $priority_device) {
@@ -165,40 +199,6 @@ $device_final = array_merge($device1, $device2);
             }
         }
         ?>
-        <div class="heading">
-            <h3>View Device Details</h3>
-            <hr>
-        </div>
-        <div class="heading">
-            <div class="card-body table-responsive p-0" style="height: 600px;">
-                <table class="table table-head-fixed text-nowrap">
-                    <thead-dark>
-                        <tr>
-                            <th>Dev ID</th>
-                            <th>Data Rate</th>
-                            <th>Distance</th>
-                            <th>Tollerence</th>
-                            <th>Allocation</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            //display device table
-
-                            for ($m = 0; $m < $device_count; $m++) {
-                                echo " <tr>";
-                                echo "<td>" . $device_final[$m]->dev_id . "</td>";
-                                echo "<td>" . $device_final[$m]->data_rate . "</td>";
-                                echo "<td>" . $device_final[$m]->distance . "</td>";
-                                echo "<td>" . $device_final[$m]->tolerance . "</td>";
-                                echo "<td>" . $device_final[$m]->allocation . "</td>";
-                                echo "</tr>";
-                            }
-                            ?>
-                        </tbody>
-                </table>
-            </div>
-        </div>
 
 
    
@@ -217,7 +217,7 @@ $device_final = array_merge($device1, $device2);
                         <th>Data Rate</th>
                         <th>Distance</th>
                         <th>Tollerence</th>
-                        <th>Allocation</th>
+                        <th>Allocated to channel</th>
                     </tr>
                     </thead>
                     <tbody>
