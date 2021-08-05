@@ -90,7 +90,7 @@ for ($i = 0; $i < $device_count; $i++) {
         $device_final[$i]->allocation = 0;
     }
 }
-
+// algorithm start
 for ($i = $priority_device; $i < $device_count; $i++) {
     for ($c = 1; $c <= $channel_count; $c++) {
         $device_final[$i]->allocation = $c;
@@ -120,6 +120,7 @@ for ($i = $priority_device; $i < $device_count; $i++) {
             break;
     }
 }
+
 //print_r($device_final);
 
 $x = [];
@@ -150,16 +151,15 @@ for ($i = 0; $i < $device_count; $i++) {
 ?>
 <script>
     // Access the array elements
+    //allocated chart
     var xarr = <?php echo json_encode($x); ?>;
     var yarr = <?php echo json_encode($y); ?>;
-
+//requested chart
     var x1arr = <?php echo json_encode($x1); ?>;
     var y1arr = <?php echo json_encode($y1); ?>;
-
+//base chart
     var basex = <?php echo json_encode($base_x); ?>;
-
     var basey = <?php echo json_encode($base_y); ?>;
-
 
 
     //  Display the array elements
@@ -172,10 +172,12 @@ for ($i = 0; $i < $device_count; $i++) {
     var data1 = [];
     var data2 = [];
     var data0 = [];
+    //base convert
     data0.push({
         'x': basex,
         'y': basey
     });
+    //allocated convert
     for (var i = 0; i < xarr.length; i++) {
 
         data1.push({
@@ -183,7 +185,7 @@ for ($i = 0; $i < $device_count; $i++) {
             'y': yarr[i]
         });
     }
-
+//request convert
     for (var i = 0; i < x1arr.length; i++) {
 
         data2.push({
@@ -191,18 +193,12 @@ for ($i = 0; $i < $device_count; $i++) {
             'y': y1arr[i]
         });
     }
-
-
-
-
-
     // for (var i = 0; i < xarr.length; i++) {
     //   document.write( JSON.stringify(data1[i]));
     // }
     //console.log( JSON.stringify(plotData));
 </script>
 <html lang="en">
-
 <head>
     <title>Channel Allocation </title>
     <meta http-equiv="refresh" content="5">
