@@ -1,0 +1,201 @@
+<html lang="en">
+
+<head>
+    <title>Channel Allocation </title>
+</head>
+
+<body translate="no">
+    <div style="width:80%; float: center; margin-left: 3rem; margin-top: 3rem;">
+        <canvas id="chart1"></canvas>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script>
+        var jitter = function(data) {
+            return data.map(function(e) {
+                var xJitter = Math.random() * (-1 - 1) + 1;
+                var yJitter = Math.random() * (-1 - 1) + 1;
+                return {
+                    x: e.x + xJitter,
+                    y: e.y + yJitter,
+                }
+            });
+        };
+        var data0 = [{
+            x: 100,
+            y: 100
+        }]
+        var data1 = [{
+            x: 10,
+            y: 50
+        }, {
+            x: 11,
+            y: 30
+        }, {
+            x: 10.5,
+            y: 50
+        }, {
+            x: 11.5,
+            y: 30
+        }, {
+            x: 12,
+            y: 30
+        }, {
+            x: 10.75,
+            y: 30
+        }, {
+            x: 12.4,
+            y: 30
+        }, {
+            x: 9.6,
+            y: 30
+        }, {
+            x: 10,
+            y: 20
+        }, {
+            x: 11,
+            y: 30
+        }, {
+            x: 10.5,
+            y: 20
+        }, {
+            x: 11.5,
+            y: 30
+        }, {
+            x: 12,
+            y: 30
+        }, {
+            x: 10.75,
+            y: 10
+        }, {
+            x: 12.4,
+            y: 30
+        }, {
+            x: 9.6,
+            y: 10
+        }, ];
+        var data2 = [{
+            x: 1,
+            y: 30 + .1
+        }, {
+            x: 11,
+            y: 30 - .1
+        }, {
+            x: 10.5 + 1.5,
+            y: 30 + .2
+        }, {
+            x: 11.5 + .2,
+            y: 30
+        }, {
+            x: 12 + 1.5,
+            y: 30 - .2
+        }, {
+            x: 10.75 + 1.5,
+            y: 30 + .15
+        }, {
+            x: 12.4 + 1.5,
+            y: 30 + .1
+        }, {
+            x: 9.6 + 20 + 1.5,
+            y: 30 - .2
+        }, {
+            x: 10 + 20 + 1.5,
+            y: 30
+        }, {
+            x: 11 + 20 + 1.5,
+            y: 30
+        }, {
+            x: 100,
+            y: 30
+        }, {
+            x: 11.5 + 20 + 1.5,
+            y: 30
+        }, {
+            x: 200,
+            y: 30
+        }, {
+            x: 10.75 + 20 + 1.5,
+            y: 30
+        }, {
+            x: 12.4 + 20 + 1.5,
+            y: 30
+        }, {
+            x: 9.6 + 20 + 1.5,
+            y: 40
+        }, ];
+        var ctx = document.getElementById("chart1").getContext("2d");
+        var myScatter = Chart.Scatter(ctx, {
+            data: {
+                datasets: [{
+                    label: "Allocated Device",
+                    borderColor: 'green',
+                    backgroundColor: 'green',
+                    pointBackgroundColor: 'green',
+                    data: data1
+                }, {
+                    label: "Requsted Device",
+                    borderColor: 'red',
+                    backgroundColor: 'red',
+                    pointBackgroundColor: 'red',
+                    data: data2
+                }, {
+                    label: "Base Station",
+                    borderColor: 'blue',
+                    backgroundColor: 'blue',
+                    pointBackgroundColor: 'blue',
+                    data: data0
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    fontSize: 18,
+                    text: 'Channel Allocation'
+                },
+                showLines: false,
+                scales: {
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Y Rank',
+                            fontSize: 16
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 200,
+                            fontSize: 14,
+
+                        }
+
+                    }],
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom',
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'X Rank',
+                            fontSize: 16
+                        },
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 200,
+                            fontSize: 14,
+                        }
+                    }]
+                },
+                elements: {
+                    point: {
+                        radius: 10
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
