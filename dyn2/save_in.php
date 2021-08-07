@@ -17,7 +17,7 @@ $sql= "INSERT INTO base (x_cod, y_cod, channel_count) VALUES ('$base_x', '$base_
 if ($conn->query($sql) === true) { ?>
 
 <script type="text/javascript">
-            alert('Devices Placed!');
+            //alert('Devices Placed!');
             window.location.href = "client.html";
         </script>
     

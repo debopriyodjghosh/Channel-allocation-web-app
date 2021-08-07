@@ -1,16 +1,43 @@
-<!DOCTYPE html>
+<?php
+session_start();
+if(empty($_SESSION["refreshed_round"])){
+    $_SESSION["refreshed_round"]=0;
+}
+$_SESSION["refreshed_round"]++;
+
+
+?><!DOCTYPE html>
 <html>
 
 <head>
-	<title>Sending  random clients data........</title>
+	<title>Sending data...</title>
+   
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <meta http-equiv="refresh" content="2">
 </head>
 
-<body>
+<body >
 	<center>
+        <style>
+            h1{
+                margin-top: 180px;
+                
+            }
+            h2{
+                color:red;
+                font-weight: 400;
+                font-size: 40;
+            }
+        </style>
 <?php
 	include 'database.php';
-    echo "Sending random client data to server after every 2 secconds..................";
+    
+    echo "<h1>Sending random client data to server after every 2 seconds.....</h1>";
+    echo "<h2>Data Sent <br><b>" . $_SESSION["refreshed_round"] . "</b><br> times</h2>";
+    echo "<br><div class='spinner-border' style='width: 3rem; height: 3rem;' role='status'>
+    <span class='sr-only'>Loading...</span>
+  </div><br>";
+    
         $q = "select x_cod FROM base LIMIT 1";
         $r = mysqli_query($conn,$q);
         while ($i = mysqli_fetch_array($r)) {

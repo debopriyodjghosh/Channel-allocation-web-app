@@ -8,8 +8,12 @@
 </head>
 
 <body>
-    <div style="margin: 10em auto auto 25em;width: 50%;">
-        <h1>Client : Dynamic Channel Allocation</h1>
+    <div style="margin: 7em auto auto 25em;width: 50%;">
+        <center>
+            <h1><b>Client : Dynamic Channel Allocation</b></h1>
+        </center>
+
+        <hr>
         <div class="alert alert-success alert-dismissible" id="success" style="display:none;">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
         </div>
@@ -30,15 +34,16 @@
                 <label for="data_size">Data size to be send(in MB):</label>
                 <input type="number" class="form-control" id="data_size" placeholder="Data size" name="data_size">
             </div>
+            <hr>
             <div class="row">
                 <div class="col-md-6">
                     <div class="text-center">
-                        <input type="button" name="save" class="btn btn-primary" value="Request" id="butsave">
+                        <input type="button" name="save" class="btn btn-primary btn-lg" value="Request" id="butsave">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="text-right">
-                        <input type="button" name="random" class="btn btn-danger" value="Random Data " onclick="location.href = 'random_clients.php';">
+                        <input type="button" name="random" class="btn btn-danger btn-lg" value="Random Data" onclick="location.href = 'random_clients.php';">
                     </div>
                 </div>
             </div>
