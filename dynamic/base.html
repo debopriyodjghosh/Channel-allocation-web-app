@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Basic details</title>
+</head>
+<body>
+    <div style="margin: auto;width: 60%;">
+        <div class="alert alert-success alert-dismissible" id="success" style="display:none;">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        </div>
+        <form id="fupForm" name="form1" action="insert.php" method="post">
+
+            <div class="form-group">
+                <label for="x_cod">X-coordinate:</label>
+                <input type="number" class="form-control" id="x_cod" placeholder="X-coordinate" name="x_cod">
+            </div>
+            <div class="form-group">
+                <label for="y_cod">Y-coordinate:</label>
+                <input type="number" class="form-control" id="y_cod" placeholder="Y-coordinate" name="y_cod">
+            </div>
+            <div class="form-group">
+                <label for="channel_count">Number of Channels:</label>
+                <input type="number" class="form-control" id="channel_count" placeholder="Number of channels" name="channel_count">
+            </div>
+        
+            <input type="submit" name="save" class="btn btn-primary" value="Add base station">
+        </form>
+    </div>
+</body>
+</html>
