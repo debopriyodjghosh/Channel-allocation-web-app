@@ -64,6 +64,7 @@ $_SESSION["refreshed_round"]++;
 	VALUES ('$data_rate', '$x_cod', '$y_cod', '$distance', '$tollerence', '$allocation', '$data_size', '$priority')";
 	if (mysqli_query($conn, $sql)) {
 		echo json_encode(array("statusCode"=>200));
+        echo '<br><br><a href="chart.php" target="_blank"><button type="button" class="btn btn-dark btn-lg">View Chart</button></a>';
 	} 
 	else {
 		echo json_encode(array("statusCode"=>201));
