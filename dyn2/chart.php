@@ -3,7 +3,7 @@
 include 'database.php';
 
 //Base station coordinate fetch to be done
-
+$algo_run_count=10;
 //priority device
 $q = "select channel_count, x_cod, y_cod FROM base";
 $r = mysqli_query($conn,$q);
@@ -95,14 +95,31 @@ for($i=0;$i<sizeof($device2);$i++){
     $device2[$i]['data_rate_given'],
     $device2[$i]['time_required']);
 }
+//compare object data rate and sort
 function comparator($object1, $object2)
 {
     return $object1->data_rate > $object2->data_rate;
 }
 
+function comparator2($object1, $object2)
+{
+    return $object1->priority < $object2->priority;
+}
+
+
+
 usort($device2object, 'comparator');
 $device_final = array_merge($device1object, $device2object);
+$flag=0;
+for($m=0;$m<sizeof($device_final);$m++)
+{
+    if($device_final[$m]->allocation!=0)
+    {
+        $flag=1;
+        break;
+    }
 
+}
 // echo "Initially";
 // print_r($device_final);
 
@@ -112,66 +129,67 @@ function In($dis1, $dis2)
     $value = $dis1 / $dis2;
     return pow($value, 4);
 }
-//iinitial allocation
-for ($i = 0; $i < sizeof($device_final); $i++) {
-    if ($i < sizeof($device1object)) {
-        $device_final[$i]->allocation = $i + 1;
-    } else {
-        $device_final[$i]->allocation = 0;
-    }
-}
-//echo "after initial:";
-//print_r($device_final);
-
-//algorithm starts here
-
-for ($i = sizeof($device1object); $i < sizeof($device_final); $i++)
- {
-    for ($c = 1; $c <= $channel_count; $c++) {
-        $device_final[$i]->allocation = $c;
-        $D = array();
-        
-        //making a set of those device which are allocated to same channel
-        for ($x = 0; $x < sizeof($device_final); $x++) {
-            if ($device_final[$x]->allocation == $c) {
-                array_push($D, (new device($device_final[$x]->dev_id,
-                                 $device_final[$x]->data_rate,
-                                 $device_final[$x]->x_cod,
-                                 $device_final[$x]->y_cod,
-                                  $device_final[$x]->distance,
-                                   $device_final[$x]->tollerence,
-                                    $device_final[$x]->allocation,
-                                    $device_final[$x]->data_size,
-                                    $device_final[$x]->priority,
-                                    $device_final[$x]->data_rate_given,
-                                    $device_final[$x]->time_required
-                                    
-                                )));
-            }
+//flag for first time algo run
+if ($flag==0 AND sizeof($device_final)==10) {
+    //initial allocation
+    for ($i = 0; $i < sizeof($device_final); $i++) {
+        if ($i < sizeof($device1object)) {
+            $device_final[$i]->allocation = $i + 1;
+        } else {
+            $device_final[$i]->allocation = 0;
         }
-        for ($x = 0; $x < sizeof($D); $x++) {
-            $sum = 0.0;
-            for ($y = 0; $y < sizeof($D); $y++) {
-                if ($x == $y) {
-                    $sum = $sum + 0.0;
-                } else {
-                    $sum = $sum + In($D[$x]->distance, $D[$y]->distance);
+    }
+    //echo "after initial:";
+    //print_r($device_final);
+
+    //algorithm starts here
+
+    for ($i = sizeof($device1object); $i < sizeof($device_final); $i++) {
+        for ($c = 1; $c <= $channel_count; $c++) {
+            $device_final[$i]->allocation = $c;
+            $D = array();
+        
+            //making a set of those device which are allocated to same channel
+            for ($x = 0; $x < sizeof($device_final); $x++) {
+                if ($device_final[$x]->allocation == $c) {
+                    array_push($D, (new device(
+                        $device_final[$x]->dev_id,
+                        $device_final[$x]->data_rate,
+                        $device_final[$x]->x_cod,
+                        $device_final[$x]->y_cod,
+                        $device_final[$x]->distance,
+                        $device_final[$x]->tollerence,
+                        $device_final[$x]->allocation,
+                        $device_final[$x]->data_size,
+                        $device_final[$x]->priority,
+                        $device_final[$x]->data_rate_given,
+                        $device_final[$x]->time_required
+                    )));
                 }
             }
-            //checking if sum of interference greater than tolerance
-            if ($sum > $D[$x]->tollerence) {
-                $device_final[$i]->allocation = 0;
+            for ($x = 0; $x < sizeof($D); $x++) {
+                $sum = 0.0;
+                for ($y = 0; $y < sizeof($D); $y++) {
+                    if ($x == $y) {
+                        $sum = $sum + 0.0;
+                    } else {
+                        $sum = $sum + In($D[$x]->distance, $D[$y]->distance);
+                    }
+                }
+                //checking if sum of interference greater than tolerance
+                if ($sum > $D[$x]->tollerence) {
+                    $device_final[$i]->allocation = 0;
+                    $device_final[$i]->priority=$device_final[$i]->priority+1;//check
+                    break;
+                }
+            }
+            if ($device_final[$i]->allocation == $c) {
                 break;
             }
-           
         }
-        if ($device_final[$i]->allocation == $c)
-            break;
     }
+    //end algo
 }
-
-
-//end algo
 
    //for how much data_rate i am getting
    for ($j=1;$j<=$channel_count;$j++) {
@@ -203,7 +221,7 @@ for ($i = sizeof($device1object); $i < sizeof($device_final); $i++)
            }
            if($sum==0)
            {
-               $xyz[$x]->data_rate_given=20; //bandwidth
+               $xyz[$x]->data_rate_given=$xyz[$x]->data_rate;
            }
            else{
                $snr = 1 / $sum;
@@ -221,6 +239,20 @@ for ($i = sizeof($device1object); $i < sizeof($device_final); $i++)
            }
        }
    }
+   //time required calculation
+
+   for ($i = 0; $i < sizeof($device_final); $i++) {
+    if($device_final[$i]->allocation!=0)
+    {
+        if($device_final[$i]->time_required==1000){
+        $device_final[$i]->time_required=ceil(($device_final[$i]->data_size)/($device_final[$i]->data_rate_given));//why zero dhukche
+      } 
+       $pok=$device_final[$i]->time_required;
+        $device_final[$i]->time_required=$pok-1;
+        echo "$pok";
+
+    }
+}
 
 //echo "After algo";
 //print_r($device_final);
@@ -305,7 +337,7 @@ for ($i = 0; $i < sizeof($device_final); $i++)
 
 <head>
     <title>Visualization Chart</title>
-    <meta http-equiv="refresh" content="5">
+    <!-- <meta http-equiv="refresh" content="2"> -->
 </head>
 
 <body translate="no">
@@ -395,11 +427,104 @@ for ($i = 0; $i < sizeof($device_final); $i++)
         });
  
     </script>
-    <script>
+    <!-- <script>
         window.setTimeout(function() {
             window.location.reload();
-        }, 5000);
-    </script>
+        }, 2000);
+    </script> -->
 
 </body>
 </html>
+
+
+
+<?php
+//deleting an device using time required
+  for ($i = 0; $i < sizeof($device_final); $i++) {
+    if ($device_final[$i]->time_required==0 ) {
+        //delete er query hobe
+        $ch_no=$device_final[$i]->allocation;
+        //allocation 0 hobe
+        $device_final[$i]->allocation=0;
+
+        $alloc=array();
+       //making a set of those device which are allocated to that channel
+       for ($x=0;$x<sizeof($device_final);$x++) {
+           if ($device_final[$x]->allocation==$ch_no) {
+               
+               array_push($alloc, (new device($device_final[$x]->dev_id,
+                                 $device_final[$x]->data_rate,
+                                  $device_final[$x]->x_cod, 
+                                  $device_final[$x]->y_cod, 
+                                  $device_final[$x]->distance,
+                                   $device_final[$x]->tollerence,
+                                    $device_final[$x]->allocation,
+                                     $device_final[$x]->data_size,
+                                      $device_final[$x]->priority,
+                                      $device_final[$x]->data_rate_given,
+                                      $device_final[$x]->time_required)));
+           }
+       }
+       
+      
+       $id=$device_final[$i]->dev_id;
+       $sql2="DELETE from device where dev_id='$id'";
+       
+        if ($conn->query($sql2) === true) {
+            
+        } else {
+                echo "<script>alert('Error: ' . $sql . '<br>' . $conn->error')</script>";
+            }
+
+            array_splice($device_final, $i, 1);
+        
+
+       $pri=array();
+       //making a set of those device which are allocated to 0
+       for ($x=0;$x<sizeof($device_final);$x++) {
+           if ($device_final[$x]->allocation==0) {
+               array_push($pri, (new device($device_final[$x]->dev_id,
+                                 $device_final[$x]->data_rate,
+                                  $device_final[$x]->x_cod, 
+                                  $device_final[$x]->y_cod, 
+                                  $device_final[$x]->distance,
+                                   $device_final[$x]->tollerence,
+                                    $device_final[$x]->allocation,
+                                     $device_final[$x]->data_size,
+                                      $device_final[$x]->priority,
+                                      $device_final[$x]->data_rate_given,
+                                      $device_final[$x]->time_required)));
+           }
+       }
+      
+       usort($pri, 'comparator2');
+       $sum2=0;
+       print_r($alloc);
+       for ($x=0;$x<sizeof($pri);$x++) 
+       {
+        for ($y=0;$y<sizeof($alloc);$y++) {
+           $sum2=$sum2 + In($pri[$x]->distance, $alloc[$y]->distance);
+        }
+        echo $sum2;
+        //allocation chnge next time
+        if($sum2 < $pri[$x]->tollerence)
+        {
+            $pri[$x]->allocation=$ch_no;
+            $id2=$pri[$x]->dev_id;
+            
+            $sql3="Update device set allocation='$ch_no' where dev_id='$id2'";
+            if ($conn->query($sql) === true) {
+       
+            } else {
+                    echo "<script>alert('Error: ' . $sql . '<br>' . $conn->error')</script>";
+                }
+            break;
+        }
+       }
+
+      
+        
+    } 
+}
+
+?>

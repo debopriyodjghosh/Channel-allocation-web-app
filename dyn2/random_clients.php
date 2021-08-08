@@ -13,7 +13,7 @@ $_SESSION["refreshed_round"]++;
 	<title>Sending data...</title>
    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <meta http-equiv="refresh" content="2">
+    <meta http-equiv="refresh" content="5">
 </head>
 
 <body >
@@ -32,7 +32,7 @@ $_SESSION["refreshed_round"]++;
 <?php
 	include 'database.php';
     
-    echo "<h1>Sending random client data to server after every 2 seconds.....</h1>";
+    echo "<h1>Sending random client data to server after every 5 seconds.....</h1>";
     echo "<h2>Data Sent <br><b>" . $_SESSION["refreshed_round"] . "</b><br> times</h2>";
     echo "<br><div class='spinner-border' style='width: 3rem; height: 3rem;' role='status'>
     <span class='sr-only'>Loading...</span>

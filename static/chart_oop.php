@@ -76,7 +76,7 @@ function In($dis1, $dis2)
 usort($device2, 'comparator');
 //merge
 $device_final = array_merge($device1, $device2);
-
+//print_r($device_final);
 
 //print device table before allocation to be done
 
