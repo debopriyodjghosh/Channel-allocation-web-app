@@ -249,7 +249,7 @@ if ($flag==0 AND sizeof($device_final)==10) {
       } 
        $pok=$device_final[$i]->time_required;
         $device_final[$i]->time_required=$pok-1;
-        echo "$pok";
+        //echo "$pok";
 
     }
 }
@@ -337,7 +337,7 @@ for ($i = 0; $i < sizeof($device_final); $i++)
 
 <head>
     <title>Visualization Chart</title>
-    <!-- <meta http-equiv="refresh" content="2"> -->
+    <meta http-equiv="refresh" content="2">
 </head>
 
 <body translate="no">
@@ -427,11 +427,11 @@ for ($i = 0; $i < sizeof($device_final); $i++)
         });
  
     </script>
-    <!-- <script>
+    <script>
         window.setTimeout(function() {
             window.location.reload();
         }, 2000);
-    </script> -->
+    </script>
 
 </body>
 </html>
@@ -499,7 +499,7 @@ for ($i = 0; $i < sizeof($device_final); $i++)
       
        usort($pri, 'comparator2');
        $sum2=0;
-       print_r($alloc);
+      // print_r($alloc);
        for ($x=0;$x<sizeof($pri);$x++) 
        {
         for ($y=0;$y<sizeof($alloc);$y++) {
@@ -507,18 +507,18 @@ for ($i = 0; $i < sizeof($device_final); $i++)
         }
         echo $sum2;
         //allocation chnge next time
-        if($sum2 < $pri[$x]->tollerence)
+        if($sum2 < $pri[$x]->tollerence)//check
         {
             $pri[$x]->allocation=$ch_no;
             $id2=$pri[$x]->dev_id;
             
-            $sql3="Update device set allocation='$ch_no' where dev_id='$id2'";
+            $sql3="UPDATE device set allocation='$ch_no' where dev_id='$id2'";
             if ($conn->query($sql) === true) {
-       
+      
             } else {
                     echo "<script>alert('Error: ' . $sql . '<br>' . $conn->error')</script>";
                 }
-            break;
+            
         }
        }
 
