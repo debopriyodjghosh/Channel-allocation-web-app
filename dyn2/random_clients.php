@@ -60,8 +60,10 @@ $_SESSION["refreshed_round"]++;
     $y3 = pow(($y_cod - $base_y), 2); //y2-y1 sqr
     $distance = sqrt($x3 + $y3);
     $priority = 0;
-	$sql = "INSERT INTO `device`( `data_rate`, `x_cod`, `y_cod`, `distance`, `tollerence`, `allocation`, `data_size`, `priority`) 
-	VALUES ('$data_rate', '$x_cod', '$y_cod', '$distance', '$tollerence', '$allocation', '$data_size', '$priority')";
+    $data_rate_given=0; //calculate later
+     $time_required= 1000; //change later
+	$sql = "INSERT INTO `device`( `data_rate`, `x_cod`, `y_cod`, `distance`, `tollerence`, `allocation`, `data_size`, `priority`, `data_rate_given`, `time_required`) 
+	VALUES ('$data_rate', '$x_cod', '$y_cod', '$distance', '$tollerence', '$allocation', '$data_size', '$priority', '$data_rate_given', '$time_required')";
 	if (mysqli_query($conn, $sql)) {
 		echo json_encode(array("statusCode"=>200));
         echo '<br><br><a href="chart.php" target="_blank"><button type="button" class="btn btn-dark btn-lg">View Chart</button></a>';

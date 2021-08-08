@@ -15,7 +15,6 @@
 	$x_cod=$_POST['x_cod'];
 	$y_cod=$_POST['y_cod'];
 	$data_size=$_POST['data_size'];
-    //$dev_id = uniqid('dev');
     $temp = $data_rate / 20;
     $tollerence = 1 / (pow(2, $temp) - 1);
     $allocation = 0;
@@ -23,8 +22,11 @@
     $y3 = pow(($y_cod - $base_y), 2); //y2-y1 sqr
     $distance = sqrt($x3 + $y3);
     $priority = 0;
-	$sql = "INSERT INTO `device`(`data_rate`, `x_cod`, `y_cod`, `distance`, `tollerence`, `allocation`, `data_size`, `priority`) 
-	VALUES ('$data_rate', '$x_cod', '$y_cod', '$distance', '$tollerence', '$allocation', '$data_size', '$priority')";
+    $data_rate_given=0; //calculate later
+    $time_required= 10000; //change later
+
+	$sql = "INSERT INTO `device`(`data_rate`, `x_cod`, `y_cod`, `distance`, `tollerence`, `allocation`, `data_size`, `priority`, `data_rate_given`, `time_required`) 
+	VALUES ('$data_rate', '$x_cod', '$y_cod', '$distance', '$tollerence', '$allocation', '$data_size', '$priority', '$data_rate_given', '$time_required')";
 	if (mysqli_query($conn, $sql)) {
 		echo json_encode(array("statusCode"=>200));
 	} 

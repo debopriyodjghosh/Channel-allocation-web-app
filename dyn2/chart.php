@@ -3,7 +3,7 @@
 include 'database.php';
 
 //Base station coordinate fetch to be done
-$device_count=20;
+
 //priority device
 $q = "select channel_count, x_cod, y_cod FROM base";
 $r = mysqli_query($conn,$q);
@@ -12,6 +12,8 @@ while ($i = mysqli_fetch_array($r)) {
     $base_x = $i['x_cod'];
     $base_y = $i['y_cod'];
 }
+
+
 $query = 'SELECT * FROM device';
 
 $result = mysqli_query( $conn, $query );
@@ -19,15 +21,17 @@ $device_array = array();
 while( $row = mysqli_fetch_array( $result, MYSQLI_ASSOC ) ) {
 array_push( $device_array, $row );
 }
-// print_r($device_array);
+//print_r($device_array);
 $device1=array();
 $device2=array();
+
 for($i=0;$i<sizeof($device_array);$i++){
 if($device_array[$i]['data_rate']>20)
     array_push($device1,$device_array[$i]);
 else
     array_push($device2,$device_array[$i]);   
 }
+
 class device
 {
     public $dev_id;
@@ -39,8 +43,10 @@ class device
     public $allocation;
     public $data_size;
     public $priority;
+    public $data_rate_given;
+    public $time_required;
 
-    function __construct($d_id, $d_rate,$x_cod,$y_cod, $dis, $tol, $allo, $data_size, $priority)
+    function __construct($d_id, $d_rate,$x_cod,$y_cod, $dis, $tol, $allo, $data_size, $priority, $data_rate_given, $time_required)
     {
         $this->dev_id = $d_id;
         $this->data_rate = $d_rate;
@@ -51,24 +57,55 @@ class device
         $this->allocation = $allo;
         $this->data_size=$data_size;
         $this->priority=$priority;
+        $this->data_rate_given=$data_rate_given;
+        $this->time_required=$time_required;
     }
 }
+
 $device1object=array();
 $device2object=array();
+
 for($i=0;$i<sizeof($device1);$i++){
-    $device1object[$i] = new device($device1[$i]['dev_id'],$device1[$i]['data_rate'],$device1[$i]['x_cod'],$device1[$i]['y_cod'],$device1[$i]['distance'],$device1[$i]['tollerence'],$device1[$i]['allocation'],$device1[$i]['data_size'],$device1[$i]['priority']);
+    $device1object[$i] = 
+    new device($device1[$i]['dev_id'],
+    $device1[$i]['data_rate'],
+    $device1[$i]['x_cod'],
+    $device1[$i]['y_cod'],
+    $device1[$i]['distance'],
+    $device1[$i]['tollerence'],
+    $device1[$i]['allocation'],
+    $device1[$i]['data_size'],
+    $device1[$i]['priority'],
+    $device1[$i]['data_rate_given'],
+    $device1[$i]['time_required']
+    
+);
 }
 for($i=0;$i<sizeof($device2);$i++){
-    $device2object[$i] = new device($device2[$i]['dev_id'],$device2[$i]['data_rate'],$device2[$i]['x_cod'],$device2[$i]['y_cod'],$device2[$i]['distance'],$device2[$i]['tollerence'],$device2[$i]['allocation'],$device2[$i]['data_size'],$device2[$i]['priority']);
+    $device2object[$i] = 
+    new device($device2[$i]['dev_id'],
+    $device2[$i]['data_rate'],
+    $device2[$i]['x_cod'],
+    $device2[$i]['y_cod'],
+    $device2[$i]['distance'],
+    $device2[$i]['tollerence'],
+    $device2[$i]['allocation'],
+    $device2[$i]['data_size'],
+    $device2[$i]['priority'],
+    $device2[$i]['data_rate_given'],
+    $device2[$i]['time_required']);
 }
 function comparator($object1, $object2)
 {
     return $object1->data_rate > $object2->data_rate;
 }
+
 usort($device2object, 'comparator');
 $device_final = array_merge($device1object, $device2object);
-echo "Initially";
-print_r($device_final);
+
+// echo "Initially";
+// print_r($device_final);
+
 function In($dis1, $dis2)
 { //function for calculating interference
 
@@ -85,9 +122,11 @@ for ($i = 0; $i < sizeof($device_final); $i++) {
 }
 //echo "after initial:";
 //print_r($device_final);
+
 //algorithm starts here
 
-for ($i = sizeof($device1object); $i < sizeof($device_final); $i++) {
+for ($i = sizeof($device1object); $i < sizeof($device_final); $i++)
+ {
     for ($c = 1; $c <= $channel_count; $c++) {
         $device_final[$i]->allocation = $c;
         $D = array();
@@ -95,7 +134,19 @@ for ($i = sizeof($device1object); $i < sizeof($device_final); $i++) {
         //making a set of those device which are allocated to same channel
         for ($x = 0; $x < sizeof($device_final); $x++) {
             if ($device_final[$x]->allocation == $c) {
-                array_push($D, (new device($device_final[$x]->dev_id, $device_final[$x]->data_rate,$device_final[$x]->x_cod,$device_final[$x]->y_cod, $device_final[$x]->distance, $device_final[$x]->tollerence, $device_final[$x]->allocation,$device_final[$x]->data_size,$device_final[$x]->priority)));
+                array_push($D, (new device($device_final[$x]->dev_id,
+                                 $device_final[$x]->data_rate,
+                                 $device_final[$x]->x_cod,
+                                 $device_final[$x]->y_cod,
+                                  $device_final[$x]->distance,
+                                   $device_final[$x]->tollerence,
+                                    $device_final[$x]->allocation,
+                                    $device_final[$x]->data_size,
+                                    $device_final[$x]->priority,
+                                    $device_final[$x]->data_rate_given,
+                                    $device_final[$x]->time_required
+                                    
+                                )));
             }
         }
         for ($x = 0; $x < sizeof($D); $x++) {
@@ -112,31 +163,85 @@ for ($i = sizeof($device1object); $i < sizeof($device_final); $i++) {
                 $device_final[$i]->allocation = 0;
                 break;
             }
-            else{
-                $snr=1/$sum;
-                $log=log(($snr+1),2);
-                $data_rate_given = 20 * $log;
-            }
+           
         }
         if ($device_final[$i]->allocation == $c)
             break;
     }
 }
-//echo "After algo";
-//print_r($device_final);
-// for($i=0;$i<sizeof($device_final);$i++){
-//     $x=strval($device_final[$i]->allocation);
-//     echo nl2br("\n");
-//     echo " ".$x;
-//     $y= strval($device_final[$i]->dev_id);
-//     echo nl2br("\n");  
-//     echo " ".$y;
-//     // $sqlupdate="UPDATE device SET allocation = $x  WHERE dev_id ='$y'";
-//     // mysqli_query( $conn, $sqlupdate);
-// }
 
 
 //end algo
+
+   //for how much data_rate i am getting
+   for ($j=1;$j<=$channel_count;$j++) {
+       $xyz=array();
+       //making a set of those device which are allocated to same channel
+       for ($x=0;$x<sizeof($device_final);$x++) {
+           if ($device_final[$x]->allocation==$j) {
+               array_push($xyz, (new device($device_final[$x]->dev_id,
+                                 $device_final[$x]->data_rate,
+                                  $device_final[$x]->x_cod, 
+                                  $device_final[$x]->y_cod, 
+                                  $device_final[$x]->distance,
+                                   $device_final[$x]->tollerence,
+                                    $device_final[$x]->allocation,
+                                     $device_final[$x]->data_size,
+                                      $device_final[$x]->priority,
+                                      $device_final[$x]->data_rate_given,
+                                      $device_final[$x]->time_required)));
+           }
+       }
+       $sum=0;
+       for ($x = 0; $x < sizeof($xyz); $x++) {
+           for ($y = 0; $y < sizeof($xyz); $y++) {
+               if ($x == $y) {
+                   $sum = $sum + 0.0;
+               } else {
+                   $sum = $sum + In($xyz[$x]->distance, $xyz[$y]->distance);
+               }
+           }
+           if($sum==0)
+           {
+               $xyz[$x]->data_rate_given=20; //bandwidth
+           }
+           else{
+               $snr = 1 / $sum;
+               $log = log(($snr + 1), 2);
+               $xyz[$x]->data_rate_given = 20 * $log;
+           }
+               $sum = 0.0;
+           
+       }
+       for ($p = 0; $p < sizeof($xyz); $p++) {
+           for ($q = 0; $q < sizeof($device_final); $q++) {
+               if ($device_final[$q]->dev_id == $xyz[$p]->dev_id) {
+                   $device_final[$q]->data_rate_given = $xyz[$p]->data_rate_given;
+               }
+           }
+       }
+   }
+
+//echo "After algo";
+//print_r($device_final);
+
+//update in database replace code of insert with chnge
+//inserting device into data base
+for ($i = 0; $i < sizeof($device_final) ; $i++) {
+    $d = $device_final[$i]->data_rate_given; //to be given
+    $a= $device_final[$i]->allocation;
+    $t= $device_final[$i]->time_required; //to be done
+    $p=$device_final[$i]->priority; //to be done
+    $id =$device_final[$i]->dev_id;
+
+    $sql = "UPDATE `device` SET `allocation`='$a', `priority`='$p',`data_rate_given`='$d',`time_required`='$t' WHERE dev_id='$id' ";
+
+if ($conn->query($sql) === true) {
+       
+} else {
+        echo "<script>alert('Error: ' . $sql . '<br>' . $conn->error')</script>";
+    }
+ }
 
 //print_r($device_final);
 //chart start
@@ -145,7 +250,7 @@ $y = [];
 $x1 = [];
 $y1 = [];
 
-for ($i = 0; $i < $device_count; $i++) 
+for ($i = 0; $i < sizeof($device_final); $i++) 
 {
     if ($device_final[$i]->allocation > 0) {
         array_push($x, $device_final[$i]->x_cod);
@@ -157,28 +262,7 @@ for ($i = 0; $i < $device_count; $i++)
     }//requested to chart
 }
 
-//inserting device into data base
-// for ($i = 0; $i < $device_count; $i++) {
-//     //$a = $device_final[$i]->data_rate;
-//     //$b=$device_final[$i]->x_cod ;
-//     //$c=$device_final[$i]->y_cod;
-//     //$d = $device_final[$i]->distance;
-//     //$e = $device_final[$i]->tollerence;
-//     //$f = $device_final[$i]->allocation;
-
-//     $sql = "INSERT INTO device ( data_rate, distance, tollerence, allocation) 
-//     VALUES ('$a','$d','$e','$f')";
-
-//     if ($conn->query($sql) === true) { ?>
-<!-- //         <script type="text/javascript">
-//             //alert('Devices Placed!');
-//             //window.location.href = "device.html";
-//         </script> -->
-<!-- // <#?php } else { -->
-<!-- //         echo "<script>alert('Error: ' . $sql . '<br>' . $conn->error')</script>"; -->
-<!-- //     }
-// }
-// ?> -->
+?>
 
 <script>
     // Access the array elements
@@ -216,11 +300,12 @@ for ($i = 0; $i < $device_count; $i++)
         });
     }
 </script>
+
 <html lang="en">
 
 <head>
     <title>Visualization Chart</title>
-    <!--<meta http-equiv="refresh" content="5">-->
+    <meta http-equiv="refresh" content="5">
 </head>
 
 <body translate="no">
@@ -308,15 +393,13 @@ for ($i = 0; $i < $device_count; $i++)
                 }
             }
         });
-        // myScatter.datasets[2].point.radius=140;
-        // myscatter.update();
+ 
     </script>
-    <!-- <script>
+    <script>
         window.setTimeout(function() {
             window.location.reload();
         }, 5000);
-    </script> -->
+    </script>
 
 </body>
-
 </html>
