@@ -243,3 +243,30 @@ $device_final = array_merge($device1, $device2);
 </body>
 
 </html>
+<?php
+
+
+echo $device_count;
+    include 'config.php';
+
+    for ($i=0;$i<$device_count;$i++) {
+        $a=$device_final[$i]->data_rate;
+        //$b=$device_final[$i]->x_cod ;
+        //$c=$device_final[$i]->y_cod;
+        $d=$device_final[$i]->distance;
+        $e=$device_final[$i]->tolerance ;
+        $f=$device_final[$i]->allocation;
+
+        $sql = "INSERT INTO device ( data_rate, distance, tollerence, allocation) 
+    VALUES ('$a','$d','$e','$f')";
+
+        if ($conn->query($sql) === true) { ?>
+        <script type="text/javascript">
+            //alert('Devices Placed!');
+            //window.location.href = "device.html";
+        </script>
+<?php } else {
+            echo "<script>alert('Error: ' . $sql . '<br>' . $conn->error')</script>";
+        }
+    }
+?>

@@ -270,10 +270,11 @@ for ($i = 0; $i < $device_count; $i++) {
                     point: {
                         radius: 9
                     }
-                },
-                animation: {
-                    duration: 0
                 }
+                // ,
+                // animation: {
+                //     duration: 0
+                // }
             }
         });
       

@@ -365,7 +365,7 @@ for ($i = 0; $i < sizeof($device_final); $i++)
                     data: data2
                 }, {
                     label: "Base Station",
-                    pointStyle: 'rect',
+                    pointStyle: 'rectRounded',
 
                     borderColor: 'blue',
                     backgroundColor: 'blue',
@@ -419,10 +419,11 @@ for ($i = 0; $i < sizeof($device_final); $i++)
                     point: {
                         radius: 9
                     }
-                },
-                animation: {
-                    duration: 0
                 }
+                // ,
+                // animation: {
+                //     duration: 0
+                // }
             }
         });
  
