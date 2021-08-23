@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Client page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div style="margin: 7em auto auto 25em;width: 50%;">
+        <center>
+            <h1><b>Client : Dynamic Channel Allocation</b></h1>
+        </center>
+
+        <hr>
+        <div class="alert alert-success alert-dismissible" id="success" style="display:none;">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        </div>
+        <form id="fupForm" name="form1" method="post">
+            <div class="form-group">
+                <label for="data_rate">Required Data rate:</label>
+                <input type="text" class="form-control" id="data_rate" placeholder="Rquired Data rate" name="data_rate">
+            </div>
+            <div class="form-group">
+                <label for="x_cod">X-coordinate:</label>
+                <input type="number" class="form-control" id="x_cod" placeholder="X-coordinate" name="x_cod">
+            </div>
+            <div class="form-group">
+                <label for="y_cod">Y-coordinate:</label>
+                <input type="number" class="form-control" id="y_cod" placeholder="Y-coordinate" name="y_cod">
+            </div>
+            <div class="form-group">
+                <label for="data_size">Data size to be send(in MB):</label>
+                <input type="number" class="form-control" id="data_size" placeholder="Data size" name="data_size">
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="text-center">
+                        <input type="button" name="save" class="btn btn-primary btn-lg" value="Request" id="butsave">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-right">
+                        <input type="button" name="random" class="btn btn-danger btn-lg" value="Random Data"
+                            onclick="location.href = 'random_clients.php';">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <input type="button" name="save" class="btn btn-primary btn-lg" value="Show allocation details"
+                            onclick="location.href = 'algo.php';" target="_blank">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#butsave').on('click', function () {
+                $("#butsave").attr("disabled", "disabled");
+                var data_rate = $('#data_rate').val();
+                var x_cod = $('#x_cod').val();
+                var y_cod = $('#y_cod').val();
+                var data_size = $('#data_size').val();
+                if (data_rate != "" && x_cod != "" && y_cod != "" && data_size != "") {
+                    $.ajax({
+                        url: "save.php",
+                        type: "POST",
+                        data: {
+                            data_rate: data_rate,
+                            x_cod: x_cod,
+                            y_cod: y_cod,
+                            data_size: data_size
+                        },
+                        cache: false,
+                        success: function (dataResult) {
+                            var dataResult = JSON.parse(dataResult);
+                            if (dataResult.statusCode == 200) {
+                                $("#butsave").removeAttr("disabled");
+                                $('#fupForm').find('input:text').val('');
+                                $("#success").show();
+                                $('#success').html('Data added successfully !');
+                            } else if (dataResult.statusCode == 201) {
+                                alert("Error occured !");
+                            }
+
+                        }
+                    });
+                } else {
+                    alert('Please fill all the field !');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
