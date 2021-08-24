@@ -15,7 +15,7 @@ $_SESSION["refreshed_round"]++;
     <title>Sending data...</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <meta http-equiv="refresh" content="3">
+    <meta http-equiv="refresh" content="2">
 </head>
 
 <body>
@@ -77,7 +77,7 @@ $_SESSION["refreshed_round"]++;
         $sql = "INSERT INTO `device`( `data_rate`, `x_cod`, `y_cod`, `distance`, `tollerence`, `allocation`, `data_size`, `priority`, `data_rate_given`, `time_required`) 
 	VALUES ('$data_rate', '$x_cod', '$y_cod', '$distance', '$tollerence', '$allocation', '$data_size', '$priority', '$data_rate_given', '$time_required')";
         if (mysqli_query($conn, $sql)) {
-            echo json_encode(array("statusCode" => 200));
+            //echo json_encode(array("statusCode" => 200));
             echo '<br><br><a href="chart.php" target="_blank"><button type="button" class="btn btn-dark btn-lg">View Chart</button></a>';
         } else {
             echo json_encode(array("statusCode" => 201));

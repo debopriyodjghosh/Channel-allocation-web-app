@@ -12,14 +12,6 @@ if (isset($_POST)) {
  $sql1="DELETE FROM base limit 1";
  if ($conn->query($sql1))
  {}
- //delete devices
- $sql1="DELETE FROM device";
- if ($conn->query($sql1))
- {}
- $sql1="ALTER TABLE device AUTO_INCREMENT = 1";
- if ($conn->query($sql1))
- {}
- 
 //insert new
 $sql= "INSERT INTO base (x_cod, y_cod, channel_count) VALUES ('$base_x', '$base_y', '$channel_count')";
 if ($conn->query($sql) === true) { ?>
