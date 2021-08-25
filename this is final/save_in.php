@@ -14,8 +14,7 @@ if (isset($_POST)) {
  {}
  //delete devices
  $sql1="DELETE FROM device";
- if ($conn->query($sql1))
- {}
+ mysqli_query($conn,$sql1);
  $sql1="ALTER TABLE device AUTO_INCREMENT = 1";
  if ($conn->query($sql1))
  {}

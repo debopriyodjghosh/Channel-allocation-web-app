@@ -262,13 +262,13 @@ for ($m = 0; $m < sizeof($device_final); $m++) {
                         $sum = $sum + In($xyz[$x]->distance, $xyz[$y]->distance);
                     }
                 }
-                if ($sum == 0) {
+                // if ($sum == 0) {
                     $xyz[$x]->data_rate_given = $xyz[$x]->data_rate;
-                } else {
-                    $snr = 1 / $sum;
-                    $log = log(($snr + 1), 2);
-                    $xyz[$x]->data_rate_given = 20 * $log;
-                }
+                // } else {
+                //     $snr = 1 / $sum;
+                //     $log = log(($snr + 1), 2);
+                //     $xyz[$x]->data_rate_given = 20 * $log;
+                // }
                 $sum = 0.0;
             }
             for ($p = 0; $p < sizeof($xyz); $p++) {
@@ -296,12 +296,29 @@ for ($m = 0; $m < sizeof($device_final); $m++) {
         //echo "After algo";
         //print_r($device_final);
 
+        $empty_channel=array();
+        $fl=0;
+        for($ch=1;$ch<=$channel_count;$ch++){
+            {
+                for($de=0;$de<sizeof($device_final);$de++){
+                    if($device_final[$de]->allocation==$ch){
+                        $fl=1;
+                        break;
+                    }
+
+                }
+                if($fl==0){
+                    array_push($empty_channel,$ch);
+                }
+            }
+        }
 
         //deleting a device using time required
         for ($i = 0; $i < sizeof($device_final); $i++) {
             if ($device_final[$i]->time_required <= 0) {
                 //delete er query hobe
                 $ch_no = $device_final[$i]->allocation;
+                array_push($empty_channel, $ch_no);
                 //allocation 0 hobe
                 // $device_final[$i]->allocation = 0;
                 $id = $device_final[$i]->dev_id;
@@ -339,10 +356,14 @@ for ($m = 0; $m < sizeof($device_final); $m++) {
                 // usort($pri, 'comparator');
                 $sum2 = 0.0;
                 for ($x = 0; $x < sizeof($pri); $x++) {
+             
+                    for($em_ch=0;$em_ch<sizeof($empty_channel);$em_ch++)
+                    {
+                    $pri[$x]->allocation = $empty_channel[$em_ch];
                     $alloc = array();
                     //making a set of those device which are allocated to that channel
                     for ($g = 0; $g < sizeof($device_final); $g++) {
-                        if ($device_final[$x]->allocation == $ch_no) {
+                        if ($device_final[$x]->allocation == $empty_channel[$em_ch]) {
                             array_push($alloc, (new device(
                                 $device_final[$g]->dev_id,
                                 $device_final[$g]->data_rate,
@@ -358,7 +379,6 @@ for ($m = 0; $m < sizeof($device_final); $m++) {
                             )));
                         }
                     }
-                    $pri[$x]->allocation = $ch_no;
                     for ($y = 0; $y < sizeof($alloc); $y++) {
                         $sum2 = $sum2 + In($pri[$x]->distance, $alloc[$y]->distance);
                     }
@@ -367,14 +387,15 @@ for ($m = 0; $m < sizeof($device_final); $m++) {
                     {
                         $pri[$x]->allocation = 0;
                     }
-                    if ($pri[$x]->allocation == $ch_no) {
+                    if ($pri[$x]->allocation == $empty_channel[$em_ch]) {
                         for ($z = 0; $z < sizeof($device_final); $z++) {
                             if ($device_final[$z]->dev_id == $pri[$x]->dev_id) {
-                                $device_final[$z]->allocation = $ch_no;
+                                $device_final[$z]->allocation = $empty_channel[$em_ch];
                             }
                         }
                     }
                     $sum2 = 0.0;
+                    }
                 }
             }
         }
